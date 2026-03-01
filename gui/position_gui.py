@@ -162,10 +162,13 @@ class PositionControlGUI:
         self.ax.grid(True, color="#333333", linewidth=0.5)
         self.position_line, = self.ax.plot([], [], "dodgerblue", linewidth=2,
                                            label="Position")
-        self.target_line = self.ax.axhline(y=0, color="red", linestyle="--",
-                                           linewidth=1.5, label="Target")
+        # Draw target as a plain line (not axhline) so it doesn't confuse autoscale
+        self.target_line, = self.ax.plot([], [], "r--", linewidth=1.5,
+                                         label="Target")
         self.ax.legend(loc="upper left", fontsize=12, facecolor="#2d2d2d",
                        edgecolor="#555555", labelcolor="white")
+        self.ax.set_xlim(0, 1)
+        self.ax.set_ylim(-5, 5)
         self.fig.tight_layout()
 
     def log(self, message):
@@ -218,11 +221,12 @@ class PositionControlGUI:
             self.result = None
             self.new_data = True
 
-        # Clear plot
+        # Clear plot and set initial view around target
         self.position_line.set_data([], [])
-        self.target_line.set_ydata([deg])
-        self.ax.relim()
-        self.ax.autoscale_view()
+        self.target_line.set_data([0, 1], [deg, deg])
+        margin = max(abs(deg) * 0.15, 5.0)
+        self.ax.set_xlim(0, 1)
+        self.ax.set_ylim(min(0, deg) - margin, max(0, deg) + margin)
         self.canvas.draw_idle()
 
         # Update UI state
@@ -329,18 +333,27 @@ class PositionControlGUI:
                 target = self.target_deg
                 self.new_data = False
             else:
-                t = p = None
+                t = p = target = None
                 self.new_data = False
 
         if t is not None:
+            # Update position line
             self.position_line.set_data(t, p)
-            self.target_line.set_ydata([self.target_deg])
-            self.ax.relim()
-            self.ax.autoscale_view()
-            # Add a small margin to y-axis
-            ymin, ymax = self.ax.get_ylim()
-            margin = max(abs(ymax - ymin) * 0.1, 2.0)
+
+            # Update target line to span the full x range
+            t_max = max(t[-1], 0.5)
+            self.target_line.set_data([0, t_max], [target, target])
+
+            # Compute y-axis from actual data + target
+            all_y = p + [target, 0.0]
+            ymin = min(all_y)
+            ymax = max(all_y)
+            margin = max((ymax - ymin) * 0.15, 5.0)
             self.ax.set_ylim(ymin - margin, ymax + margin)
+
+            # X-axis: 0 to slightly past latest time
+            self.ax.set_xlim(0, t_max * 1.05)
+
             self.canvas.draw_idle()
 
         self.poll_id = self.root.after(50, self.poll_data)

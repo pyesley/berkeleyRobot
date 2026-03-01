@@ -1,10 +1,10 @@
 /**
  * Linux-side position controller using TORQUE mode with fast CAN feedback.
  *
- * Motor is connected through an 11:1 gearbox.
+ * Motor is connected through a 14:1 gearbox.
  * Encoder is on the motor shaft (not gearbox output).
  * Target angle is specified in OUTPUT shaft degrees.
- * Motor must turn 11x more than the output.
+ * Motor must turn 14x more than the output.
  *
  * Uses FAST_FRAME (TPDO4 at 0x481) for motor position feedback at 500 Hz,
  * sends torque commands via PDO3 (RPDO3 at 0x401).
@@ -40,7 +40,7 @@ constexpr uint32_t CAN_ID_SDO_RX     = makeCanId(0xC, DEVICE_ID);  // 0x601 - SD
 constexpr uint32_t CAN_ID_HEARTBEAT  = makeCanId(0xE, DEVICE_ID);  // 0x701
 
 // Gearbox
-constexpr float GEAR_RATIO = 11.0f;   // motor turns per output turn
+constexpr float GEAR_RATIO = 14.0f;   // motor turns per output turn
 
 // Control parameters
 constexpr float TORQUE_LIMIT   = 0.3f;    // Nm (at motor shaft)

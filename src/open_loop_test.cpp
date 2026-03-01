@@ -1,7 +1,7 @@
 /**
  * Open-loop motor controller via TORQUE mode with CAN feedback.
  *
- * Motor has 11:1 gearbox. Encoder is on the motor shaft.
+ * Motor has 14:1 gearbox. Encoder is on the motor shaft.
  * Angles specified as OUTPUT shaft degrees.
  *
  * Subcommands:
@@ -46,7 +46,7 @@ constexpr uint32_t CAN_ID_SDO_TX     = makeCanId(0xB, DEVICE_ID);
 constexpr uint32_t CAN_ID_SDO_RX     = makeCanId(0xC, DEVICE_ID);
 constexpr uint32_t CAN_ID_HEARTBEAT  = makeCanId(0xE, DEVICE_ID);
 
-constexpr float GEAR_RATIO = 11.0f;
+constexpr float GEAR_RATIO = 14.0f;
 constexpr float DEG2RAD    = M_PI / 180.0f;
 constexpr float RAD2DEG    = 180.0f / M_PI;
 
