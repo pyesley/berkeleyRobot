@@ -1,0 +1,4 @@
+../../Src/can_interface.c:10:19:CAN_Init	4
+../../Src/can_interface.c:44:6:CAN_RxCallback	9
+../../Src/can_interface.c:92:6:CAN_SendTelemetry	3
+../../Src/can_interface.c:155:6:HAL_FDCAN_RxFifo0Callback	10

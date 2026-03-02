@@ -1,0 +1,7 @@
+../../Src/position_ctrl.c:4:6:PosCtrl_Init	4	static
+../../Src/position_ctrl.c:35:6:PosCtrl_Run	8	static
+../../Src/position_ctrl.c:140:6:PosCtrl_Enable	8	static
+../../Src/position_ctrl.c:154:6:PosCtrl_Disable	8	static
+../../Src/position_ctrl.c:164:6:PosCtrl_SetTarget	0	static
+../../Src/position_ctrl.c:169:6:PosCtrl_SetGains	0	static
+../../Src/position_ctrl.c:176:6:PosCtrl_SetHome	8	static
