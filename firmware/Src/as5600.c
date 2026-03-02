@@ -1,6 +1,6 @@
 #include "as5600.h"
 
-#define I2C_TIMEOUT 5
+#define I2C_TIMEOUT 100
 
 HAL_StatusTypeDef AS5600_Init(AS5600_Handle_t *dev, I2C_HandleTypeDef *hi2c)
 {
@@ -11,23 +11,18 @@ HAL_StatusTypeDef AS5600_Init(AS5600_Handle_t *dev, I2C_HandleTypeDef *hi2c)
   dev->output_deg = 0.0f;
   dev->initialized = false;
 
-  /* Verify device is present by reading status register */
-  uint8_t status;
-  uint8_t reg = AS5600_STATUS_REG;
-  HAL_StatusTypeDef ret = HAL_I2C_Master_Transmit(hi2c, AS5600_I2C_ADDR, &reg, 1, I2C_TIMEOUT);
-  if (ret != HAL_OK) return ret;
-
-  ret = HAL_I2C_Master_Receive(hi2c, AS5600_I2C_ADDR, &status, 1, I2C_TIMEOUT);
-  if (ret != HAL_OK) return ret;
-
-  /* Read initial angle */
-  reg = AS5600_RAW_ANGLE_REG;
+  /* Retry loop: wait for AS5600 to power up and respond */
+  HAL_StatusTypeDef status = HAL_ERROR;
   uint8_t buf[2];
-  ret = HAL_I2C_Master_Transmit(hi2c, AS5600_I2C_ADDR, &reg, 1, I2C_TIMEOUT);
-  if (ret != HAL_OK) return ret;
+  while (status != HAL_OK) {
+    HAL_I2C_Init(dev->hi2c);
 
-  ret = HAL_I2C_Master_Receive(hi2c, AS5600_I2C_ADDR, buf, 2, I2C_TIMEOUT);
-  if (ret != HAL_OK) return ret;
+    /* Wait for I2C device to power up */
+    HAL_Delay(100);
+
+    status = HAL_I2C_Mem_Read(dev->hi2c, AS5600_I2C_ADDR, AS5600_RAW_ANGLE_REG,
+                              I2C_MEMADD_SIZE_8BIT, buf, 2, I2C_TIMEOUT);
+  }
 
   dev->raw_angle = ((uint16_t)buf[0] << 8) | buf[1];
   dev->prev_raw = dev->raw_angle;
@@ -40,13 +35,10 @@ HAL_StatusTypeDef AS5600_ReadAngle(AS5600_Handle_t *dev)
 {
   if (!dev->initialized) return HAL_ERROR;
 
-  uint8_t reg = AS5600_RAW_ANGLE_REG;
   uint8_t buf[2];
 
-  HAL_StatusTypeDef ret = HAL_I2C_Master_Transmit(dev->hi2c, AS5600_I2C_ADDR, &reg, 1, I2C_TIMEOUT);
-  if (ret != HAL_OK) return ret;
-
-  ret = HAL_I2C_Master_Receive(dev->hi2c, AS5600_I2C_ADDR, buf, 2, I2C_TIMEOUT);
+  HAL_StatusTypeDef ret = HAL_I2C_Mem_Read(dev->hi2c, AS5600_I2C_ADDR, AS5600_RAW_ANGLE_REG,
+                                           I2C_MEMADD_SIZE_8BIT, buf, 2, I2C_TIMEOUT);
   if (ret != HAL_OK) return ret;
 
   dev->raw_angle = ((uint16_t)buf[0] << 8) | buf[1];

@@ -58,6 +58,7 @@
 extern DMA_HandleTypeDef hdma_usart2_rx;
 /* USER CODE BEGIN EV */
 extern FDCAN_HandleTypeDef hfdcan1;
+extern I2C_HandleTypeDef hi2c1;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -76,6 +77,11 @@ extern FDCAN_HandleTypeDef hfdcan1;
 void FDCAN1_IT0_IRQHandler(void)
 {
   HAL_FDCAN_IRQHandler(&hfdcan1);
+}
+
+void I2C1_EV_IRQHandler(void)
+{
+  HAL_I2C_EV_IRQHandler(&hi2c1);
 }
 
 /* USER CODE END 1 */

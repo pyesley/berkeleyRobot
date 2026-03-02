@@ -135,14 +135,16 @@ int main(void)
   MX_OPAMP3_Init();
   MX_TIM1_Init();
   MX_USART2_UART_Init();
+  /* USER CODE BEGIN 2 */
+  /* I2C and FDCAN must be initialized BEFORE MX_MotorControl_Init,
+     because MC_APP_BootHook uses them for AS5600 and CAN init */
+  MX_I2C1_Init();
+  MX_FDCAN1_Init();
+  /* USER CODE END 2 */
   MX_MotorControl_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
-  /* USER CODE BEGIN 2 */
-  MX_I2C1_Init();
-  MX_FDCAN1_Init();
-  /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -890,7 +892,7 @@ static void MX_GPIO_Init(void)
 static void MX_I2C1_Init(void)
 {
   hi2c1.Instance = I2C1;
-  hi2c1.Init.Timing = 0x00802172; /* 400kHz Fast Mode @ 170MHz PCLK1 */
+  hi2c1.Init.Timing = 0x00F07BFF; /* I2C timing matching reference design */
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
@@ -914,9 +916,9 @@ static void MX_I2C1_Init(void)
 
 /**
   * @brief FDCAN1 Initialization Function (CAN bus)
-  *        PB8 = RX, PB9 = TX, 1 Mbit/s Classic CAN
-  *        170MHz PCLK1, prescaler=10 -> 17MHz CAN clock
-  *        17MHz / (13+3+1) = 1 Mbit/s
+  *        PA11 = RX, PB9 = TX, 1 Mbit/s Classic CAN
+  *        160MHz PCLK1, prescaler=16 -> 10MHz CAN clock
+  *        10MHz / (7+2+1) = 1 Mbit/s
   */
 static void MX_FDCAN1_Init(void)
 {
@@ -924,17 +926,17 @@ static void MX_FDCAN1_Init(void)
   hfdcan1.Init.ClockDivider = FDCAN_CLOCK_DIV1;
   hfdcan1.Init.FrameFormat = FDCAN_FRAME_CLASSIC;
   hfdcan1.Init.Mode = FDCAN_MODE_NORMAL;
-  hfdcan1.Init.AutoRetransmission = ENABLE;
+  hfdcan1.Init.AutoRetransmission = DISABLE;
   hfdcan1.Init.TransmitPause = DISABLE;
   hfdcan1.Init.ProtocolException = DISABLE;
-  hfdcan1.Init.NominalPrescaler = 10;
+  hfdcan1.Init.NominalPrescaler = 16;
   hfdcan1.Init.NominalSyncJumpWidth = 1;
-  hfdcan1.Init.NominalTimeSeg1 = 13;
-  hfdcan1.Init.NominalTimeSeg2 = 3;
-  hfdcan1.Init.DataPrescaler = 10;
+  hfdcan1.Init.NominalTimeSeg1 = 7;
+  hfdcan1.Init.NominalTimeSeg2 = 2;
+  hfdcan1.Init.DataPrescaler = 1;
   hfdcan1.Init.DataSyncJumpWidth = 1;
-  hfdcan1.Init.DataTimeSeg1 = 13;
-  hfdcan1.Init.DataTimeSeg2 = 3;
+  hfdcan1.Init.DataTimeSeg1 = 1;
+  hfdcan1.Init.DataTimeSeg2 = 1;
   hfdcan1.Init.StdFiltersNbr = 1;
   hfdcan1.Init.ExtFiltersNbr = 0;
   hfdcan1.Init.TxFifoQueueMode = FDCAN_TX_FIFO_OPERATION;
