@@ -1,5 +1,5 @@
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/sync_registers.c:33:9:RI_SetRegisterGlobal	17
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/sync_registers.c:167:9:RI_SetRegisterMotor1	90
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/sync_registers.c:616:9:RI_GetRegisterGlobal	20
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/sync_registers.c:761:11:RI_GetRegisterMotor1	104
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/sync_registers.c:1348:9:RI_MovString	4
+../../Src/sync_registers.c:33:9:RI_SetRegisterGlobal	17
+../../Src/sync_registers.c:167:9:RI_SetRegisterMotor1	90
+../../Src/sync_registers.c:616:9:RI_GetRegisterGlobal	20
+../../Src/sync_registers.c:761:11:RI_GetRegisterMotor1	104
+../../Src/sync_registers.c:1348:9:RI_MovString	4

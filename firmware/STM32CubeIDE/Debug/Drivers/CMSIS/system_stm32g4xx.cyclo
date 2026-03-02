@@ -1,2 +1,2 @@
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/system_stm32g4xx.c:179:6:SystemInit	1
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/system_stm32g4xx.c:228:6:SystemCoreClockUpdate	5
+../../Src/system_stm32g4xx.c:179:6:SystemInit	1
+../../Src/system_stm32g4xx.c:228:6:SystemCoreClockUpdate	5

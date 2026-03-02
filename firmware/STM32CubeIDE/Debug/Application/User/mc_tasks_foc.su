@@ -1,7 +1,7 @@
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/mc_tasks_foc.c:468:13:FOC_Clear	16	static
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/mc_tasks_foc.c:79:13:FOC_Init	40	static
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/mc_tasks_foc.c:148:6:TSK_MF_StopProcessing	8	static
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/mc_tasks_foc.c:504:13:FOC_InitAdditionalMethods	0	static
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/mc_tasks_foc.c:527:13:FOC_CalcCurrRef	24	static,ignoring_inline_asm
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/mc_tasks_foc.c:166:13:TSK_MediumFrequencyTaskM1	32	static
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/mc_tasks_foc.c:582:16:FOC_HighFrequencyTask	64	static
+../../Src/mc_tasks_foc.c:468:13:FOC_Clear	16	static
+../../Src/mc_tasks_foc.c:79:13:FOC_Init	40	static
+../../Src/mc_tasks_foc.c:148:6:TSK_MF_StopProcessing	8	static
+../../Src/mc_tasks_foc.c:504:13:FOC_InitAdditionalMethods	0	static
+../../Src/mc_tasks_foc.c:527:13:FOC_CalcCurrRef	24	static,ignoring_inline_asm
+../../Src/mc_tasks_foc.c:166:13:TSK_MediumFrequencyTaskM1	32	static
+../../Src/mc_tasks_foc.c:582:16:FOC_HighFrequencyTask	64	static

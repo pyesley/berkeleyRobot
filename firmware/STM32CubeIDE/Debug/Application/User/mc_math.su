@@ -1,6 +1,6 @@
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/mc_math.c:58:20:MCM_Clarke	16	static
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/mc_math.c:299:24:MCM_Trig_Functions	8	static
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/mc_math.c:130:13:MCM_Park	32	static
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/mc_math.c:245:20:MCM_Rev_Park	32	static
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/mc_math.c:343:16:MCM_Sqrt	0	static,ignoring_inline_asm
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/mc_math.c:378:17:MCM_floatToIntBit	8	static
+../../Src/mc_math.c:58:20:MCM_Clarke	16	static
+../../Src/mc_math.c:299:24:MCM_Trig_Functions	8	static
+../../Src/mc_math.c:130:13:MCM_Park	32	static
+../../Src/mc_math.c:245:20:MCM_Rev_Park	32	static
+../../Src/mc_math.c:343:16:MCM_Sqrt	0	static,ignoring_inline_asm
+../../Src/mc_math.c:378:17:MCM_floatToIntBit	8	static

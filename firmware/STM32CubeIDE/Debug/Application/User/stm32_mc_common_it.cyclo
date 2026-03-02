@@ -1,4 +1,4 @@
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/stm32_mc_common_it.c:70:6:USART2_IRQHandler	14
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/stm32_mc_common_it.c:148:6:HardFault_Handler	1
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/stm32_mc_common_it.c:167:6:SysTick_Handler	3
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/stm32_mc_common_it.c:213:6:EXTI15_10_IRQHandler	2
+../../Src/stm32_mc_common_it.c:70:6:USART2_IRQHandler	14
+../../Src/stm32_mc_common_it.c:148:6:HardFault_Handler	1
+../../Src/stm32_mc_common_it.c:167:6:SysTick_Handler	3
+../../Src/stm32_mc_common_it.c:213:6:EXTI15_10_IRQHandler	2

@@ -1,2 +1,2 @@
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/pwm_common.c:46:13:startTimers	2
-C:/Users/pyesl/.st_workbench/projects/try 6 3 1 2026/Src/pwm_common.c:85:13:waitForPolarizationEnd	5
+../../Src/pwm_common.c:46:13:startTimers	2
+../../Src/pwm_common.c:85:13:waitForPolarizationEnd	5

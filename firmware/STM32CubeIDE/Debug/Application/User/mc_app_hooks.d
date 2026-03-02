@@ -1,5 +1,4 @@
-Application/User/mc_app_hooks.o: \
- C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/Src/mc_app_hooks.c \
+Application/User/mc_app_hooks.o: ../../Src/mc_app_hooks.c \
  ../../Inc/mc_type.h ../../Inc/mc_stm_types.h \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_bus.h \
  ../../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h \
@@ -30,9 +29,12 @@ Application/User/mc_app_hooks.o: \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h \
+ ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h \
+ ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_i2c.h \
+ ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_i2c_ex.h \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h \
@@ -55,7 +57,13 @@ Application/User/mc_app_hooks.o: \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_cordic.h \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_spi.h \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_cortex.h \
- ../../Inc/mc_app_hooks.h
+ ../../Inc/mc_app_hooks.h ../../Inc/as5600.h ../../Inc/position_ctrl.h \
+ ../../Inc/as5600.h ../../Inc/mc_api.h ../../Inc/mc_type.h \
+ ../../Inc/mc_interface.h ../../Inc/pwm_curr_fdbk.h \
+ ../../Inc/speed_torq_ctrl.h \
+ ../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Inc/pid_regulator.h \
+ ../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Inc/speed_pos_fdbk.h \
+ ../../Inc/can_interface.h ../../Inc/position_ctrl.h
 ../../Inc/mc_type.h:
 ../../Inc/mc_stm_types.h:
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_bus.h:
@@ -87,9 +95,12 @@ Application/User/mc_app_hooks.o: \
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h:
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h:
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h:
+../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h:
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h:
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h:
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h:
+../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_i2c.h:
+../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_i2c_ex.h:
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h:
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h:
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h:
@@ -113,3 +124,15 @@ Application/User/mc_app_hooks.o: \
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_spi.h:
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_cortex.h:
 ../../Inc/mc_app_hooks.h:
+../../Inc/as5600.h:
+../../Inc/position_ctrl.h:
+../../Inc/as5600.h:
+../../Inc/mc_api.h:
+../../Inc/mc_type.h:
+../../Inc/mc_interface.h:
+../../Inc/pwm_curr_fdbk.h:
+../../Inc/speed_torq_ctrl.h:
+../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Inc/pid_regulator.h:
+../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Inc/speed_pos_fdbk.h:
+../../Inc/can_interface.h:
+../../Inc/position_ctrl.h:
