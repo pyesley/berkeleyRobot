@@ -1,0 +1,242 @@
+================================================================================
+  SESSION HANDOFF — berkeleyRobot Project
+  Written: 2026-03-01 (Windows session → Linux continuation)
+================================================================================
+
+This file contains everything needed to continue development from a new Claude
+session on Linux.  Read this first.
+
+================================================================================
+1. PROJECT OVERVIEW
+================================================================================
+
+This is a motor position control system using:
+
+  Board:    B-G431B-ESC1 (STM32G431 ESC dev board from ST)
+  Motor:    M6C12 (BLDC, 14 pole pairs, sensorless FOC via MCSDK v6.4.0)
+  Encoder:  AS5600 magnetic encoder (I2C, 12-bit, on motor shaft)
+  Gearbox:  14:1 ratio (encoder reads motor shaft, output = motor_deg / 14)
+  CAN:      FDCAN at 1 Mbit/s (gs_usb USB-CAN adapter on PC side)
+
+The firmware runs sensorless FOC (Field Oriented Control) via ST's Motor
+Control SDK (MCSDK) for commutation, with a custom position control layer
+on top that reads the AS5600 encoder and sends speed commands to the MCSDK.
+
+================================================================================
+2. REPOSITORY STRUCTURE
+================================================================================
+
+berkeleyRobot/
+├── firmware/                    # STM32 firmware (C)
+│   ├── Inc/                     # Header files
+│   │   ├── can_interface.h      # CAN message IDs and protocol
+│   │   ├── position_ctrl.h      # Position controller state machine
+│   │   ├── as5600.h             # AS5600 encoder driver (GEAR_RATIO=14.0)
+│   │   ├── main.h
+│   │   ├── pmsm_motor_parameters.h  # Motor electrical params (14 pole pairs)
+│   │   └── ... (MCSDK headers)
+│   ├── Src/                     # Source files
+│   │   ├── can_interface.c      # CAN RX/TX handling
+│   │   ├── position_ctrl.c      # PID controller + state machine
+│   │   ├── as5600.c             # Encoder I2C read + multi-turn tracking
+│   │   ├── main.c               # Init and main loop
+│   │   └── ... (MCSDK sources)
+│   └── STM32CubeIDE/
+│       └── Debug/
+│           ├── try 6 3 1 2026.elf   # Current firmware binary
+│           ├── try 6 3 1 2026.list  # Disassembly listing
+│           ├── try 6 3 1 2026.map   # Linker map
+│           ├── Makefile             # Build system
+│           ├── objects.list         # Linker object list
+│           └── Application/         # Compiled objects
+│               Drivers/
+│               Middlewares/
+│
+├── pc_ui/                       # Python PC control panel
+│   ├── main.py                  # GUI entry point
+│   ├── control_panel.py         # Control panel UI
+│   ├── can_protocol.py          # CAN message encode/decode helpers
+│   └── position_graph.py        # Position plotting
+│
+├── test_can.py                  # ** CAN bus end-to-end test (7 phases) **
+├── test_encoder.py              # Standalone encoder test
+└── SESSION_HANDOFF.txt          # This file
+
+================================================================================
+3. CAN PROTOCOL
+================================================================================
+
+All messages use standard (11-bit) CAN IDs at 1 Mbit/s.
+
+  PC → Board (commands):
+    0x101  SET_POSITION   4 bytes: float32 LE (target degrees, output shaft)
+    0x102  SET_PID_GAINS  8 bytes: float32 LE kp, float32 LE ki
+    0x103  COMMAND        1 byte:  0x01=ENABLE, 0x02=DISABLE, 0x03=HOME, 0x04=ESTOP
+
+  Board → PC (telemetry):
+    0x110  TELEMETRY      8 bytes: float32 LE actual_deg, float32 LE target_deg
+           Sent at 100 Hz
+    0x111  STATUS         8 bytes: float32 LE speed_rpm, uint8 pos_state,
+                                   uint8 mc_state, uint16 LE faults
+           Sent at 10 Hz
+
+  Position controller states (pos_state byte):
+    0=DISABLED  1=IDLE  2=STARTING  3=RUNNING  4=STOPPING  5=FAULT
+
+  MCSDK motor states (mc_state byte):
+    0=IDLE  2=ALIGNMENT  4=START  6=RUN  8=STOP
+    10=FAULT_NOW  11=FAULT_OVER  16=CHARGE_BOOT_CAP
+    17=OFFSET_CALIB  19=SWITCH_OVER  20=WAIT_STOP_MOTOR
+
+================================================================================
+4. POSITION CONTROLLER (firmware/Src/position_ctrl.c)
+================================================================================
+
+PID defaults:  Kp=10.0  Ki=1.0  Kd=0.5
+Limits:        max_speed=2000 RPM, integral_limit=500, deadband=0.1 deg
+               min_speed=50 RPM (below this, motor stops)
+               start_delay_target (timeout for sensorless startup)
+
+State machine:
+  DISABLED → (ENABLE cmd) → IDLE → (speed_cmd > min) → STARTING
+  STARTING → (MC reaches RUN) → RUNNING → (speed_cmd < min) → STOPPING
+  STOPPING → (MC reaches IDLE) → IDLE
+  Any state + DISABLE cmd → DISABLED
+
+The controller runs at 1 kHz (called from main loop tick).
+It always reads the encoder, even when DISABLED.
+On ENABLE, target is set to current position (no sudden movement).
+
+================================================================================
+5. KNOWN FIRMWARE BUGS (discovered during testing)
+================================================================================
+
+BUG 1: AS5600_SetHome doesn't properly zero position
+  File: firmware/Src/as5600.c, AS5600_SetHome() + AS5600_ReadAngle()
+
+  SetHome zeros turn_count and sets prev_raw = raw_angle.  But ReadAngle
+  computes: motor_deg = turn_count * 360 + raw_angle * (360/4096)
+
+  After HOME, the first ReadAngle gives motor_deg = raw_angle * (360/4096)
+  which is the ABSOLUTE magnet position (0-360 on motor shaft), NOT zero.
+
+  Fix needed: save a home_offset in SetHome and subtract it in ReadAngle,
+  or track position as delta-based rather than absolute.
+
+  Observed: after HOME, actual_deg reads ~-291 instead of ~0.
+
+BUG 2: IDLE state doesn't acknowledge motor controller faults
+  File: firmware/Src/position_ctrl.c, POS_STATE_IDLE case
+
+  MC_AcknowledgeFaultMotor1() is called in STARTING, RUNNING, and STOPPING
+  states, but NOT in IDLE.  When MC is in FAULT_OVER, MC_StartMotor1()
+  returns false, so the state never transitions to STARTING where the fault
+  would be acknowledged.  Result: motor is permanently stuck until power cycle.
+
+  Fix needed: add fault acknowledgement in IDLE state, e.g.:
+    case POS_STATE_IDLE:
+      if (mc_state == FAULT_NOW || mc_state == FAULT_OVER) {
+        MC_AcknowledgeFaultMotor1();
+        break;
+      }
+      // ... existing speed check ...
+
+BUG 3: Severe sensorless startup overshoot
+  The MCSDK sensorless startup takes ~3.5 seconds.  During this time, the
+  PID controller accumulates integral error (target vs actual mismatch).
+  When the motor finally reaches RUN state, the accumulated integral causes
+  massive overshoot (commanded 100 deg, overshoots to ~500+ deg).
+
+  The motor eventually converges after ~7-8 seconds of oscillation.
+
+  Fix ideas: clear integral when transitioning from STARTING to RUNNING,
+  or clamp integral during STARTING state.
+
+================================================================================
+6. TEST SCRIPT (test_can.py)
+================================================================================
+
+Run:  python test_can.py  (or py test_can.py on Windows)
+
+Requires:  pip install python-can gs_usb libusb-package
+
+7 test phases:
+  1. Link      — listen 2s, verify 0x110 and 0x111 messages received
+  2. Enable    — send ENABLE, verify state → IDLE
+  3. Set Pos   — send target = actual+100, verify target_deg in telemetry
+  4. Movement  — monitor encoder for 15s, verify motor reaches target
+  5. PID Gains — change gains, verify no fault
+  6. Home      — send HOME, verify target zeroed (actual zeroing is buggy)
+  7. E-Stop    — send ESTOP, verify state → DISABLED
+
+Current results:  6/7 PASS (Home fails due to firmware bugs 1+2 above)
+
+IMPORTANT: if the motor faults during a test run, the MC gets stuck in
+FAULT_OVER and requires a board power cycle before the next run.
+
+================================================================================
+7. CAN ADAPTER SETUP (Linux)
+================================================================================
+
+The gs_usb adapter should work on Linux with the built-in gs_usb kernel
+module.  You can use either:
+
+  Option A: python-can with gs_usb interface (same as Windows)
+    pip install python-can gs_usb libusb-package
+    # The test script uses: can.Bus(interface='gs_usb', channel=0, bitrate=1000000)
+
+  Option B: SocketCAN (native Linux, preferred)
+    sudo modprobe gs_usb
+    sudo ip link set can0 up type can bitrate 1000000
+    # Then in Python: can.Bus(interface='socketcan', channel='can0')
+    # The test script would need the interface changed from 'gs_usb' to 'socketcan'
+
+================================================================================
+8. FLASHING FIRMWARE (Linux)
+================================================================================
+
+The board has an ST-Link debugger built in.  Flash with:
+
+  # Install OpenOCD or STM32CubeProgrammer
+  # The .elf file is at: firmware/STM32CubeIDE/Debug/try 6 3 1 2026.elf
+
+  # OpenOCD example:
+  openocd -f interface/stlink.cfg -f target/stm32g4x.cfg \
+    -c "program 'firmware/STM32CubeIDE/Debug/try 6 3 1 2026.elf' verify reset exit"
+
+  # Or use st-flash with the binary (would need objcopy to make .bin first)
+
+================================================================================
+9. BUILDING FIRMWARE (Linux)
+================================================================================
+
+The firmware can be built with arm-none-eabi-gcc using the Makefile:
+
+  cd firmware/STM32CubeIDE/Debug
+  make -j$(nproc)
+
+Prerequisites:
+  sudo apt install gcc-arm-none-eabi
+
+The Makefile, objects.list, and sources.mk are already set up.
+
+================================================================================
+10. WHAT TO DO NEXT
+================================================================================
+
+Priority fixes (firmware):
+  1. Fix AS5600_SetHome to properly zero position (add home_offset)
+  2. Add fault acknowledgement in POS_STATE_IDLE
+  3. Clear integral error when transitioning STARTING → RUNNING
+
+After firmware fixes:
+  - Re-run test_can.py — all 7 tests should pass
+  - Consider adding SocketCAN support to test_can.py for Linux
+  - The pc_ui/ control panel may need testing on Linux (uses python-can)
+
+Optional improvements:
+  - Add a CAN command for fault acknowledgement (avoid needing power cycle)
+  - Tune PID gains to reduce overshoot
+  - Add anti-windup to the PID controller
+
+================================================================================
