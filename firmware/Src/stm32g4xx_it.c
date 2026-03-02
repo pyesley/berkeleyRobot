@@ -57,7 +57,7 @@
 /* External variables --------------------------------------------------------*/
 extern DMA_HandleTypeDef hdma_usart2_rx;
 /* USER CODE BEGIN EV */
-
+extern FDCAN_HandleTypeDef hfdcan1;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -72,5 +72,10 @@ extern DMA_HandleTypeDef hdma_usart2_rx;
 /******************************************************************************/
 
 /* USER CODE BEGIN 1 */
+
+void FDCAN1_IT0_IRQHandler(void)
+{
+  HAL_FDCAN_IRQHandler(&hfdcan1);
+}
 
 /* USER CODE END 1 */

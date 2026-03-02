@@ -3,23 +3,26 @@
 # Toolchain: GNU Tools for STM32 (13.3.rel1)
 ################################################################################
 
-# Add inputs and outputs from these tool invocations to the build variables 
+MCSDK_ANY = ../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src
+MCSDK_G4  = ../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/G4xx/Src
+
+# Add inputs and outputs from these tool invocations to the build variables
 C_SRCS += \
-C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/bus_voltage_sensor.c \
-C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/circle_limitation.c \
-C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/digital_output.c \
-C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/mcpa.c \
-C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/ntc_temperature_sensor.c \
-C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/open_loop.c \
-C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/pid_regulator.c \
-C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/pqd_motor_power_measurement.c \
-C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/G4xx/Src/r3_2_g4xx_pwm_curr_fdbk.c \
-C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/r_divider_bus_voltage_sensor.c \
-C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/ramp_ext_mngr.c \
-C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/revup_ctrl.c \
-C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/speed_pos_fdbk.c \
-C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/sto_pll_speed_pos_fdbk.c \
-C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/virtual_speed_sensor.c 
+$(MCSDK_ANY)/bus_voltage_sensor.c \
+$(MCSDK_ANY)/circle_limitation.c \
+$(MCSDK_ANY)/digital_output.c \
+$(MCSDK_ANY)/mcpa.c \
+$(MCSDK_ANY)/ntc_temperature_sensor.c \
+$(MCSDK_ANY)/open_loop.c \
+$(MCSDK_ANY)/pid_regulator.c \
+$(MCSDK_ANY)/pqd_motor_power_measurement.c \
+$(MCSDK_G4)/r3_2_g4xx_pwm_curr_fdbk.c \
+$(MCSDK_ANY)/r_divider_bus_voltage_sensor.c \
+$(MCSDK_ANY)/ramp_ext_mngr.c \
+$(MCSDK_ANY)/revup_ctrl.c \
+$(MCSDK_ANY)/speed_pos_fdbk.c \
+$(MCSDK_ANY)/sto_pll_speed_pos_fdbk.c \
+$(MCSDK_ANY)/virtual_speed_sensor.c
 
 OBJS += \
 ./Middlewares/MotorControl/bus_voltage_sensor.o \
@@ -36,7 +39,7 @@ OBJS += \
 ./Middlewares/MotorControl/revup_ctrl.o \
 ./Middlewares/MotorControl/speed_pos_fdbk.o \
 ./Middlewares/MotorControl/sto_pll_speed_pos_fdbk.o \
-./Middlewares/MotorControl/virtual_speed_sensor.o 
+./Middlewares/MotorControl/virtual_speed_sensor.o
 
 C_DEPS += \
 ./Middlewares/MotorControl/bus_voltage_sensor.d \
@@ -53,40 +56,17 @@ C_DEPS += \
 ./Middlewares/MotorControl/revup_ctrl.d \
 ./Middlewares/MotorControl/speed_pos_fdbk.d \
 ./Middlewares/MotorControl/sto_pll_speed_pos_fdbk.d \
-./Middlewares/MotorControl/virtual_speed_sensor.d 
+./Middlewares/MotorControl/virtual_speed_sensor.d
 
+
+CFLAGS = -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DARM_MATH_CM4 -DUSE_HAL_DRIVER -DSTM32G431xx -c -I../../Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Inc -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/G4xx/Inc -I../../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../../Drivers/CMSIS/Include -Ofast -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb
 
 # Each subdirectory must supply rules for building sources it contributes
-Middlewares/MotorControl/bus_voltage_sensor.o: C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/bus_voltage_sensor.c Middlewares/MotorControl/subdir.mk
-	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DARM_MATH_CM4 -DUSE_HAL_DRIVER -DSTM32G431xx -c -I../../Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Inc -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/G4xx/Inc -I../../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../../Drivers/CMSIS/Include -Ofast -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/MotorControl/bus_voltage_sensor.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
-Middlewares/MotorControl/circle_limitation.o: C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/circle_limitation.c Middlewares/MotorControl/subdir.mk
-	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DARM_MATH_CM4 -DUSE_HAL_DRIVER -DSTM32G431xx -c -I../../Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Inc -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/G4xx/Inc -I../../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../../Drivers/CMSIS/Include -Ofast -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/MotorControl/circle_limitation.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
-Middlewares/MotorControl/digital_output.o: C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/digital_output.c Middlewares/MotorControl/subdir.mk
-	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DARM_MATH_CM4 -DUSE_HAL_DRIVER -DSTM32G431xx -c -I../../Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Inc -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/G4xx/Inc -I../../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../../Drivers/CMSIS/Include -Ofast -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/MotorControl/digital_output.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
-Middlewares/MotorControl/mcpa.o: C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/mcpa.c Middlewares/MotorControl/subdir.mk
-	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DARM_MATH_CM4 -DUSE_HAL_DRIVER -DSTM32G431xx -c -I../../Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Inc -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/G4xx/Inc -I../../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../../Drivers/CMSIS/Include -Ofast -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/MotorControl/mcpa.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
-Middlewares/MotorControl/ntc_temperature_sensor.o: C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/ntc_temperature_sensor.c Middlewares/MotorControl/subdir.mk
-	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DARM_MATH_CM4 -DUSE_HAL_DRIVER -DSTM32G431xx -c -I../../Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Inc -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/G4xx/Inc -I../../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../../Drivers/CMSIS/Include -Ofast -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/MotorControl/ntc_temperature_sensor.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
-Middlewares/MotorControl/open_loop.o: C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/open_loop.c Middlewares/MotorControl/subdir.mk
-	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DARM_MATH_CM4 -DUSE_HAL_DRIVER -DSTM32G431xx -c -I../../Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Inc -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/G4xx/Inc -I../../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../../Drivers/CMSIS/Include -Ofast -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/MotorControl/open_loop.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
-Middlewares/MotorControl/pid_regulator.o: C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/pid_regulator.c Middlewares/MotorControl/subdir.mk
-	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DARM_MATH_CM4 -DUSE_HAL_DRIVER -DSTM32G431xx -c -I../../Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Inc -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/G4xx/Inc -I../../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../../Drivers/CMSIS/Include -Ofast -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/MotorControl/pid_regulator.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
-Middlewares/MotorControl/pqd_motor_power_measurement.o: C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/pqd_motor_power_measurement.c Middlewares/MotorControl/subdir.mk
-	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DARM_MATH_CM4 -DUSE_HAL_DRIVER -DSTM32G431xx -c -I../../Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Inc -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/G4xx/Inc -I../../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../../Drivers/CMSIS/Include -Ofast -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/MotorControl/pqd_motor_power_measurement.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
-Middlewares/MotorControl/r3_2_g4xx_pwm_curr_fdbk.o: C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/G4xx/Src/r3_2_g4xx_pwm_curr_fdbk.c Middlewares/MotorControl/subdir.mk
-	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DARM_MATH_CM4 -DUSE_HAL_DRIVER -DSTM32G431xx -c -I../../Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Inc -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/G4xx/Inc -I../../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../../Drivers/CMSIS/Include -Ofast -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/MotorControl/r3_2_g4xx_pwm_curr_fdbk.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
-Middlewares/MotorControl/r_divider_bus_voltage_sensor.o: C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/r_divider_bus_voltage_sensor.c Middlewares/MotorControl/subdir.mk
-	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DARM_MATH_CM4 -DUSE_HAL_DRIVER -DSTM32G431xx -c -I../../Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Inc -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/G4xx/Inc -I../../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../../Drivers/CMSIS/Include -Ofast -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/MotorControl/r_divider_bus_voltage_sensor.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
-Middlewares/MotorControl/ramp_ext_mngr.o: C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/ramp_ext_mngr.c Middlewares/MotorControl/subdir.mk
-	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DARM_MATH_CM4 -DUSE_HAL_DRIVER -DSTM32G431xx -c -I../../Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Inc -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/G4xx/Inc -I../../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../../Drivers/CMSIS/Include -Ofast -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/MotorControl/ramp_ext_mngr.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
-Middlewares/MotorControl/revup_ctrl.o: C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/revup_ctrl.c Middlewares/MotorControl/subdir.mk
-	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DARM_MATH_CM4 -DUSE_HAL_DRIVER -DSTM32G431xx -c -I../../Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Inc -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/G4xx/Inc -I../../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../../Drivers/CMSIS/Include -Ofast -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/MotorControl/revup_ctrl.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
-Middlewares/MotorControl/speed_pos_fdbk.o: C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/speed_pos_fdbk.c Middlewares/MotorControl/subdir.mk
-	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DARM_MATH_CM4 -DUSE_HAL_DRIVER -DSTM32G431xx -c -I../../Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Inc -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/G4xx/Inc -I../../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../../Drivers/CMSIS/Include -Ofast -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/MotorControl/speed_pos_fdbk.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
-Middlewares/MotorControl/sto_pll_speed_pos_fdbk.o: C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/sto_pll_speed_pos_fdbk.c Middlewares/MotorControl/subdir.mk
-	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DARM_MATH_CM4 -DUSE_HAL_DRIVER -DSTM32G431xx -c -I../../Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Inc -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/G4xx/Inc -I../../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../../Drivers/CMSIS/Include -Ofast -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/MotorControl/sto_pll_speed_pos_fdbk.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
-Middlewares/MotorControl/virtual_speed_sensor.o: C:/Users/pyesl/.st_workbench/projects/try\ 6\ 3\ 1\ 2026/MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Src/virtual_speed_sensor.c Middlewares/MotorControl/subdir.mk
-	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DARM_MATH_CM4 -DUSE_HAL_DRIVER -DSTM32G431xx -c -I../../Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/Any/Inc -I../../MCSDK_v6.4.0-Full/MotorControl/MCSDK/MCLib/G4xx/Inc -I../../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../../Drivers/CMSIS/Include -Ofast -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/MotorControl/virtual_speed_sensor.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
+Middlewares/MotorControl/%.o: $(MCSDK_ANY)/%.c Middlewares/MotorControl/subdir.mk
+	arm-none-eabi-gcc "$<" $(CFLAGS) -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -o "$@"
+
+Middlewares/MotorControl/%.o: $(MCSDK_G4)/%.c Middlewares/MotorControl/subdir.mk
+	arm-none-eabi-gcc "$<" $(CFLAGS) -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -o "$@"
 
 clean: clean-Middlewares-2f-MotorControl
 

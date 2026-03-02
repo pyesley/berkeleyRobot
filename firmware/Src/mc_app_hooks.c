@@ -23,6 +23,15 @@
 /* Includes ------------------------------------------------------------------*/
 #include "mc_type.h"
 #include "mc_app_hooks.h"
+#include "as5600.h"
+#include "position_ctrl.h"
+#include "can_interface.h"
+
+extern I2C_HandleTypeDef hi2c1;
+extern FDCAN_HandleTypeDef hfdcan1;
+
+static AS5600_Handle_t g_encoder;
+static PosCtrl_Handle_t g_pos_ctrl;
 
 /** @addtogroup MCSDK
   * @{
@@ -54,7 +63,9 @@ __weak void MC_APP_BootHook(void)
    */
 
 /* USER CODE BEGIN BootHook */
-
+  AS5600_Init(&g_encoder, &hi2c1);
+  PosCtrl_Init(&g_pos_ctrl, &g_encoder);
+  CAN_Init(&g_can, &hfdcan1, &g_pos_ctrl);
 /* USER CODE END BootHook */
 }
 
@@ -73,7 +84,8 @@ __weak void MC_APP_PostMediumFrequencyHook_M1(void)
    */
 
 /* USER SECTION BEGIN PostMediumFrequencyHookM1 */
-
+  PosCtrl_Run(&g_pos_ctrl);
+  CAN_SendTelemetry(&g_can);
 /* USER SECTION END PostMediumFrequencyHookM1 */
 }
 
