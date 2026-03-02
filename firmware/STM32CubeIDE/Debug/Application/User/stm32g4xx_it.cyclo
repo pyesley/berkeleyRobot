@@ -1,1 +1,2 @@
-../../Src/stm32g4xx_it.c:76:6:FDCAN1_IT0_IRQHandler	1
+../../Src/stm32g4xx_it.c:77:6:FDCAN1_IT0_IRQHandler	1
+../../Src/stm32g4xx_it.c:82:6:I2C1_EV_IRQHandler	1

@@ -14,7 +14,7 @@
 ../../Src/stm32g4xx_hal_msp.c:685:6:HAL_TIM_PWM_MspDeInit	8	static
 ../../Src/stm32g4xx_hal_msp.c:711:6:HAL_UART_MspInit	112	static
 ../../Src/stm32g4xx_hal_msp.c:794:6:HAL_UART_MspDeInit	8	static
-../../Src/stm32g4xx_hal_msp.c:828:6:HAL_I2C_MspInit	40	static
-../../Src/stm32g4xx_hal_msp.c:849:6:HAL_I2C_MspDeInit	0	static
-../../Src/stm32g4xx_hal_msp.c:861:6:HAL_FDCAN_MspInit	48	static
-../../Src/stm32g4xx_hal_msp.c:886:6:HAL_FDCAN_MspDeInit	8	static
+../../Src/stm32g4xx_hal_msp.c:828:6:HAL_I2C_MspInit	104	static
+../../Src/stm32g4xx_hal_msp.c:864:6:HAL_I2C_MspDeInit	8	static
+../../Src/stm32g4xx_hal_msp.c:878:6:HAL_FDCAN_MspInit	120	static
+../../Src/stm32g4xx_hal_msp.c:924:6:HAL_FDCAN_MspDeInit	8	static

@@ -917,7 +917,7 @@ static void MX_I2C1_Init(void)
 /**
   * @brief FDCAN1 Initialization Function (CAN bus)
   *        PA11 = RX, PB9 = TX, 1 Mbit/s Classic CAN
-  *        160MHz PCLK1, prescaler=16 -> 10MHz CAN clock
+  *        170MHz PCLK1, prescaler=17 -> 10MHz CAN clock
   *        10MHz / (7+2+1) = 1 Mbit/s
   */
 static void MX_FDCAN1_Init(void)
@@ -929,7 +929,7 @@ static void MX_FDCAN1_Init(void)
   hfdcan1.Init.AutoRetransmission = DISABLE;
   hfdcan1.Init.TransmitPause = DISABLE;
   hfdcan1.Init.ProtocolException = DISABLE;
-  hfdcan1.Init.NominalPrescaler = 16;
+  hfdcan1.Init.NominalPrescaler = 17;
   hfdcan1.Init.NominalSyncJumpWidth = 1;
   hfdcan1.Init.NominalTimeSeg1 = 7;
   hfdcan1.Init.NominalTimeSeg2 = 2;

@@ -34,14 +34,13 @@ void PosCtrl_Init(PosCtrl_Handle_t *ctrl, AS5600_Handle_t *encoder)
 
 void PosCtrl_Run(PosCtrl_Handle_t *ctrl)
 {
+  /* Always read encoder so we can monitor position even when disabled */
+  if (AS5600_ReadAngle(ctrl->encoder) == HAL_OK) {
+    ctrl->actual_deg = AS5600_GetOutputDeg(ctrl->encoder);
+  }
+
   if (ctrl->state == POS_STATE_DISABLED || ctrl->state == POS_STATE_FAULT)
     return;
-
-  /* Read encoder */
-  if (AS5600_ReadAngle(ctrl->encoder) != HAL_OK)
-    return;
-
-  ctrl->actual_deg = AS5600_GetOutputDeg(ctrl->encoder);
 
   /* Compute position error */
   float error = ctrl->target_deg - ctrl->actual_deg;
