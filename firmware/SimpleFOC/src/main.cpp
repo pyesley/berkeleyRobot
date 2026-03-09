@@ -31,6 +31,7 @@ LowsideCurrentSense current_sense = LowsideCurrentSense(
 
 Commander commander = Commander(Serial);
 float target_velocity = 0.0f;
+float target_position = 0.0f;
 
 // ── FDCAN ────────────────────────────────────────────────────────────────────
 FDCAN_HandleTypeDef hfdcan1;
@@ -199,22 +200,41 @@ void canProcessRx() {
 
         if (mode == MODE_DISABLED || mode == MODE_IDLE) {
           target_velocity = 0;
+          target_position = motor.shaft_angle;
           motor.disable();
         } else if (mode == MODE_VELOCITY) {
           motor.enable();
           motor.controller = MotionControlType::velocity;
         } else if (mode == MODE_POSITION) {
           motor.enable();
-          motor.controller = MotionControlType::velocity;
+          motor.controller = MotionControlType::angle;
+          target_position = motor.shaft_angle;  // Start from current position
         }
       }
 
     } else if (id == CAN_ID_PDO2_TX) {
       uint8_t dlc = rxHeader.DataLength;
-      if (dlc >= 4) {
-        float cmd_vel;
-        memcpy(&cmd_vel, rxData, 4);
-        target_velocity = cmd_vel;
+      if (dlc >= 8) {
+        // Bytes 0-3: position target (rad), Bytes 4-7: velocity limit (rad/s)
+        float cmd_pos, cmd_vel_limit;
+        memcpy(&cmd_pos, rxData, 4);
+        memcpy(&cmd_vel_limit, rxData + 4, 4);
+        if (motor.controller == MotionControlType::angle) {
+          target_position = cmd_pos;
+          if (cmd_vel_limit > 0) motor.velocity_limit = cmd_vel_limit;
+        } else {
+          // Velocity mode: first float is velocity command
+          target_velocity = cmd_pos;
+        }
+        last_heartbeat_ms = millis();
+      } else if (dlc >= 4) {
+        float cmd;
+        memcpy(&cmd, rxData, 4);
+        if (motor.controller == MotionControlType::angle) {
+          target_position = cmd;
+        } else {
+          target_velocity = cmd;
+        }
         last_heartbeat_ms = millis();
       }
     }
@@ -282,18 +302,26 @@ void setup() {
   motor.linkCurrentSense(&current_sense);
   motor.linkSensor(&as5600);
 
-  motor.controller = MotionControlType::velocity;
+  motor.controller = MotionControlType::angle;
   motor.torque_controller = TorqueControlType::voltage;
-  motor.voltage_limit = 3.0;
-  motor.voltage_sensor_align = 0.5;  // lower alignment voltage
+  motor.voltage_limit = 6.0;
+  motor.voltage_sensor_align = 0.5;  // Low current during calibration to avoid board reset
 
-  motor.PID_velocity.P = 0.1;
-  motor.PID_velocity.I = 1.0;
+  // Velocity PID (inner loop)
+  motor.PID_velocity.P = 0.15;
+  motor.PID_velocity.I = 1.5;
   motor.PID_velocity.D = 0.0;
-  motor.PID_velocity.output_ramp = 20;
-  motor.PID_velocity.limit = 3.0;
-
+  motor.PID_velocity.output_ramp = 75;
+  motor.PID_velocity.limit = 6.0;
   motor.LPF_velocity.Tf = 0.05;
+
+  // Position P gain (outer loop) — outputs velocity setpoint
+  motor.P_angle.P = 10.0;
+  motor.P_angle.I = 0.0;
+  motor.P_angle.D = 0.0;
+  motor.velocity_limit = 40.0;   // High ceiling — actual limit sent by host via CAN
+  motor.LPF_angle.Tf = 0.0;     // No filtering on angle target
+
   motor.motion_downsample = 5;
 
   motor.init();
@@ -335,7 +363,13 @@ void setup() {
 
 void loop() {
   motor.loopFOC();
-  motor.move(target_velocity);
+
+  // Pass correct target based on control mode
+  if (motor.controller == MotionControlType::angle) {
+    motor.move(target_position);
+  } else {
+    motor.move(target_velocity);
+  }
   commander.run();
 
   canProcessRx();
@@ -343,6 +377,7 @@ void loop() {
   // Watchdog: stop motor if no heartbeat/command received
   if (watchdog_active && (millis() - last_heartbeat_ms > WATCHDOG_TIMEOUT_MS)) {
     target_velocity = 0;
+    target_position = motor.shaft_angle;
     watchdog_active = false;
     Serial.println("CAN: Watchdog timeout - motor stopped");
   }
@@ -364,14 +399,12 @@ void loop() {
     Serial.print("  Tgt: ");
     Serial.print(target_velocity, 2);
     Serial.print("  Ang: ");
-    Serial.print(as5600.getAngle(), 2);
-    Serial.print("  Iq: ");
+    Serial.print(motor.shaft_angle * 180.0f / _PI, 1);
+    Serial.print("d  Iq: ");
     Serial.print(current_sense.getFOCCurrents(motor.electrical_angle).q, 2);
-    Serial.print("  CAN rx:");
+    Serial.print("A  CAN rx:");
     Serial.print(can_rx_count);
     Serial.print(" tx:");
-    Serial.print(can_tx_count);
-    Serial.print("  MOE=");
-    Serial.println((TIM1->BDTR & TIM_BDTR_MOE) ? "1" : "0");
+    Serial.println(can_tx_count);
   }
 }
