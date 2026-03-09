@@ -29,7 +29,7 @@ ip link set can0 down 2>/dev/null || true
 
 # Configure CAN interface
 # 1000000 baud to match Recoil motor controller (STM32 FDCAN @ 1Mbps)
-ip link set can0 type can bitrate 1000000 restart-ms 100
+ip link set can0 type can bitrate 1000000
 
 # Increase TX queue length (default 10 is too small)
 ip link set can0 txqueuelen 128

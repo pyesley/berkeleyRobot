@@ -34,6 +34,15 @@ add_executable(position_test
 target_link_libraries(position_test Threads::Threads)
 target_include_directories(position_test PRIVATE src)
 
+# Two-stage position control test (host=position, motor=velocity)
+add_executable(position_move_test
+    src/position_move_test.cpp
+    src/can_interface.cpp
+    src/motor_protocol.cpp
+)
+target_link_libraries(position_move_test Threads::Threads)
+target_include_directories(position_move_test PRIVATE src)
+
 # Open-loop motor experiments
 add_executable(open_loop_test
     src/open_loop_test.cpp
