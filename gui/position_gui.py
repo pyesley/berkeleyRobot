@@ -104,7 +104,7 @@ class PositionControlGUI:
         tk.Label(controls_frame, text="Torque:", font=("Helvetica", 22),
                  fg="white", bg="#333333").pack(side="left")
         self.torque_entry = tk.Entry(controls_frame, font=("Helvetica", 22), width=6)
-        self.torque_entry.insert(0, "0.05")
+        self.torque_entry.insert(0, "0.1")
         self.torque_entry.pack(side="left", padx=(8, 4))
         tk.Label(controls_frame, text="Nm", font=("Helvetica", 22),
                  fg="white", bg="#333333").pack(side="left", padx=(0, 20))
@@ -237,7 +237,7 @@ class PositionControlGUI:
 
         # Build command
         cmd = [BINARY, "goto", str(deg)]
-        if torque != 0.05:
+        if torque != 0.1:
             cmd.append(str(torque))
         cmd.append("--json")
 

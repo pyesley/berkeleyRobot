@@ -6,7 +6,7 @@
  *
  * Subcommands:
  *   ramp  <torque> <seconds>         — constant torque, measure response
- *   goto  <output_deg> [torque=0.05] — smart open-loop move + fine correction
+ *   goto  <output_deg> [torque=0.1]  — smart open-loop move + fine correction
  *
  * The goto command:
  *   Phase 1 (ACCEL): apply constant torque, measure acceleration rate
@@ -513,7 +513,7 @@ void usage(const char* prog) {
     std::cout << "Usage:\n"
               << "  " << prog << " ramp <torque_Nm> <seconds>\n"
               << "      Apply constant torque, measure acceleration\n\n"
-              << "  " << prog << " goto <output_degrees> [torque=0.05] [--json]\n"
+              << "  " << prog << " goto <output_degrees> [torque=0.1] [--json]\n"
               << "      Smart open-loop move with fine correction\n"
               << "      Handles any angle, auto-detects braking point\n"
               << "      --json: output JSON lines for GUI integration\n";
@@ -548,7 +548,7 @@ int main(int argc, char* argv[]) {
     if (cmd == "ramp" && argc >= 4) {
         return cmd_ramp(can, motor, std::stof(argv[2]), std::stof(argv[3]));
     } else if (cmd == "goto" && argc >= 3) {
-        float torque = (argc > 3) ? std::stof(argv[3]) : 0.05f;
+        float torque = (argc > 3) ? std::stof(argv[3]) : 0.1f;
         return cmd_goto(can, motor, std::stof(argv[2]), torque);
     } else {
         usage(argv[0]);

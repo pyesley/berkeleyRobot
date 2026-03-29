@@ -50,3 +50,11 @@ add_executable(open_loop_test
 )
 target_link_libraries(open_loop_test Threads::Threads)
 target_include_directories(open_loop_test PRIVATE src)
+
+# Speed test — uses SimpleFOC's on-board position control via PDO2
+add_executable(speed_test
+    src/speed_test.cpp
+    src/can_interface.cpp
+)
+target_link_libraries(speed_test Threads::Threads)
+target_include_directories(speed_test PRIVATE src)
