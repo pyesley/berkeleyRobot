@@ -155,7 +155,7 @@ int main(int argc, char* argv[]) {
             float target = start_pos + direction * move_rad;
 
             // Estimated move time + settle
-            float est_time = move_rad / vel_limit + settle_s;
+            float est_time = std::abs(move_rad) / vel_limit + settle_s;
             float timeout = est_time * 2.0f;  // generous timeout
 
             std::cout << "\n--- Cycle " << (c + 1) << "/" << cycles
