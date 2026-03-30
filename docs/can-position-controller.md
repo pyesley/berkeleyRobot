@@ -109,11 +109,42 @@ Tested at 2520 deg (7 turns) each direction (2026-03-08):
 | 25 rad/s | 1.8s | 27 rad/s | < 0.5 deg |
 | 30 rad/s | 1.5s | 32 rad/s | < 1 deg |
 
+## AS5600 I2C Sensor Limitation (discovered 2026-03-29)
+
+The AS5600 over I2C is **unreliable for high-speed multi-turn position tracking**. At moderate speeds (>20 rad/s), the I2C bus locks up or produces torn reads at the 0°/360° wrap boundary, causing the position to freeze at exact multiples of 360° with a large constant velocity reading.
+
+### Failure Pattern
+- Always crashes at motor revolution boundaries (multiples of 360°)
+- More frequent going CCW (negative) than CW (positive)
+- Frozen position + constant velocity (~100-230 rad/s) = I2C bus locked
+- Requires power cycle to recover
+
+### What Was Tried (all failed at speed)
+1. Fast filter config (0x1F00) — broke calibration
+2. 1 MHz I2C clock — made failures worse
+3. Filtered angle register (0x0E) — no improvement
+4. FOC current mode — more EMI, more failures
+5. Torn read rejection (threshold) — worked at 10 rad/s, failed at 25
+6. Predictive filter (velocity-based) — worked at 25, too aggressive at 35
+7. Double-read strategy — slowed FOC loop, both reads can corrupt
+
+### Recommended Fix: Dual Encoder Architecture
+- **Keep AS5600 on motor shaft** for FOC commutation (single-turn, reliable)
+- **Add SPI encoder (e.g., AS5047P) on gearbox output** for position control
+  - SPI is faster and more noise-immune than I2C
+  - Direct output measurement eliminates gear ratio error accumulation
+  - AS5047P: 14-bit, rated to 28,000 RPM, SimpleFOC has built-in support
+
+### Motor Parameters (from ST MC Workbench)
+- Rs = 0.1 ohm, Ls = 0.05 mH, Ke = 4.94 Vrms/kRPM
+- Imax = 9.93 Apk, board rated 40 Apk
+- Max speed: 3120 RPM
+
 ## Critical Technical Notes
 
-### AS5600 Sensor
-- Works reliably up to 30+ rad/s — original assumption of 12 rad/s limit was wrong
-- Speed bottleneck is power supply current, not sensor bandwidth
+### AS5600 Sensor (low speed operation)
+- Works reliably up to ~20 rad/s in both directions
+- At low speeds, multi-turn tracking is fine
 - If velocity reads as a large constant (e.g., 4754 rad/s) after crash, the sensor state is corrupted — power cycle required
 
 ### Calibration
